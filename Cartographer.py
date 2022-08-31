@@ -15,7 +15,6 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
 from gtts import gTTS
 import os
-from playsound import playsound
 import time
 # import geopandas as gpd
 # from pyproj import CRS
@@ -89,17 +88,10 @@ class Cartographer():
             Check how close the boat is to
             the shoreline
         """
-        # mytext = 'Danger will robinson! ooooooooooooooooooooo ooooooooo'
-        # language = 'en'
         distShore = self.boatPos.exterior.distance(self.LakeEdges.exterior)
         # print(distShore)
         if(distShore - self.safetyThresh < 0):
             # print("Warning, shore collision imminent!")
-            # if(time.perf_counter() - self.timer1 > 20):
-            #     myobj = gTTS(text=mytext, lang=language, slow=False)
-            #     myobj.save("welcome.mp3")
-            #     os.system("welcome.mp3")
-            #     self.timer1 = time.perf_counter()
             return False
         else:
             return True
