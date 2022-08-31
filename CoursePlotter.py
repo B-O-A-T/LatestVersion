@@ -24,7 +24,6 @@ class CoursePlotter():
         fucntions.
     """
     def __init__(self, start, end, TWA):
-        self.soNoHead = True
         self.beat_dir = "right"
         self.weAreGettingJibbyWithIt = False
         self.currentlyBeating = False
