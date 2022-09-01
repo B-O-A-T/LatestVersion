@@ -166,7 +166,7 @@ class LynxLakeSimulation(tk.Frame):
         trueHeading = 0
         x = random.randint(360)
         trueWind = self.SAK.mod360(x)
-        trueWind = 82
+        trueWind = 180
         self.compass = Compass(trueHeading, trueWind)
         self.gpsLat, self.gpsLng = STARTING_POS
         self.gpsLatPrev, self.gpsLngPrev = self.gpsLat, self.gpsLng

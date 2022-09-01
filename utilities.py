@@ -1,3 +1,11 @@
+#*******************************************************************************************************************#
+#  Project: Prescott Yacht Club - Autonomous Sailing Project
+#  File: utilities.py
+#  Author: Lorenzo Kearns
+#
+#  Purpose: Program holds Tools class which has all of the utility functions which are used across all
+#            programs within the project
+#*******************************************************************************************************************#
 from math import *
 import math
 import numpy as np
