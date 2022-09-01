@@ -1,6 +1,6 @@
 #*******************************************************************************************************************#
 #  Project: Prescott Yacht Club - Autonomous Sailing Project
-#  File: boatSim.py
+#  File: CoursePlotter.py
 #  Author: Lorenzo Kearns
 #
 #  Purpose: Finalize and set a true heading for the ship, also contain future waypoints
@@ -23,9 +23,9 @@ class CoursePlotter():
     """
     def __init__(self, start, end, TWA):
         self.beat_dir = "right"
-        self.weAreGettingJibbyWithIt = False
+        self.inJibeManeuver = False
         self.currentlyBeating = False
-        self.tacAnBád = False
+        self.inTackManeuver = False
         self.currBear = 0
         self.desBear = 0
         self.Way = WayFinder()
@@ -58,18 +58,18 @@ class CoursePlotter():
             put it all together to call from main and decide how we move
         """
         # self.desBear = desBearing
-        if(not self.weAreGettingJibbyWithIt and not self.tacAnBád):
+        if(not self.inJibeManeuver and not self.inTackManeuver):
             bearing = self.is_safe(x, y, currBearing)
-        elif(self.weAreGettingJibbyWithIt):
+        elif(self.inJibeManeuver):
             # print(self.desBear) # Testing statement
-            bearing = self.jibe_away_homie(currBearing)
-        elif(self.tacAnBád):
-            bearing = time_to_tack_fam(currBearing)
+            bearing = self.jibe(currBearing)
+        elif(self.inTackManeuver):
+            bearing = tack(currBearing)
         else:
             bearing = currBearing
         return bearing
 
-    def jibe_away_homie(self, currBear):
+    def jibe(self, currBear):
         """
             Perform a jibe maneuver
         """
@@ -83,7 +83,7 @@ class CoursePlotter():
                 return currBear
             else:
                 self.currentlyBeating = False
-                self.weAreGettingJibbyWithIt = False
+                self.inJibeManeuver = False
                 return currBear
         elif(self.beat_dir == "left"):
             if(abs(currBear - self.desBear) >= 0.5):
@@ -92,12 +92,12 @@ class CoursePlotter():
                 return currBear
             else:
                 self.currentlyBeating = False
-                self.weAreGettingJibbyWithIt = False
+                self.inJibeManeuver = False
                 return currBear
         else:
             print("error")
 
-    def time_to_tack_fam(self, currBear):
+    def tack(self, currBear):
         """
             Perform a tack maneuver
         """
@@ -107,7 +107,7 @@ class CoursePlotter():
                 return currBear
             else:
                 self.currentlyBeating = False
-                self.tacAnBád = False
+                self.inTackManeuver = False
                 return currBear
         elif(self.beat_dir == "left"):
             if(abs(currBear - self.desBear) >= 0.5):
@@ -115,7 +115,7 @@ class CoursePlotter():
                 return currBear
             else:
                 self.currentlyBeating = False
-                self.tacAnBád = False
+                self.inTackManeuver = False
                 return currBear
 
     def is_safe(self, x, y, bearing):
@@ -162,7 +162,7 @@ class CoursePlotter():
         """
         raise NotImplemented
 
-    def are_we_getting_jibby_with_it(self, dirChange, newHead):
+    def determine_maneuver(self, dirChange, newHead):
         """
             Determine whether the best choice of changing the direction
             is with a jibe or a tack, later might be better to name this
@@ -171,13 +171,13 @@ class CoursePlotter():
         if (dirChange == "left"):
             testHead = self.SAK.mod360(newHead - 30)
             if(not self.in_no_go_range(testHead)):
-                self.weAreGettingJibbyWithIt = True
+                self.inJibeManeuver = True
         elif (dirChange == "right"):
             testHead = self.SAK.mod360(newHead + 30)
             if(not self.in_no_go_range(testHead)):
-                self.weAreGettingJibbyWithIt = True
+                self.inJibeManeuver = True
         else:
-            self.tacAnBád = True
+            self.inTackManeuver = True
 
     def beat_adjust(self):
         """
@@ -189,13 +189,13 @@ class CoursePlotter():
             self.beat_dir = "left"
             headingChange = self.SAK.mod360(self.NoGoRange.min - 12)
             self.desBear = self.SAK.mod360(self.NoGoRange.min - 12)
-            self.are_we_getting_jibby_with_it(self.beat_dir, headingChange)
+            self.determine_maneuver(self.beat_dir, headingChange)
             return headingChange
         elif(self.beat_dir == "left"):
             self.beat_dir = "right"
             headingChange = self.SAK.mod360(self.NoGoRange.max + 12)
             self.desBear = self.SAK.mod360(self.NoGoRange.max + 12)
-            self.are_we_getting_jibby_with_it(self.beat_dir, headingChange)
+            self.determine_maneuver(self.beat_dir, headingChange)
             return headingChange
 
     def is_collison(self):

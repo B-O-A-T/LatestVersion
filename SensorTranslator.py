@@ -1,6 +1,6 @@
 #*******************************************************************************************************************#
 #  Project: Prescott Yacht Club - Autonomous Sailing Project
-#  File: boatSim.py
+#  File: SensorTranslator.py
 #  Author: Lorenzo Kearns
 #
 #  Purpose: Translate sensor data coming from serial and wrap it into a telemetry object that is readable by all other programs
