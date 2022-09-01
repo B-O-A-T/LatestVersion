@@ -29,11 +29,17 @@ class Telemetry():
         over serial data
     """
     def __init__(self):
-        self.recvGPSLat = 0
-        self.recvGPSLon = 0
         self.telem = TelemCommands()
         self.grandCentral = serial.Serial('COM5', 115200, timeout=1)
         self.handshake_with_arduino()
+        self.init_object_telem_variables()
+
+    def init_object_telem_variables(self):
+        self.recvGPSLat = self.send_telem_request(self.telem.Lat)
+        self.recvGPSLon = self.send_telem_request(self.telem.Lon)
+        self.recvVesselBearing = self.send_telem_request(self.telem.relBearing)
+        self.recvWindSpeed = self.send_telem_request(self.telem.windSpeed)
+        self.recvAparentWindAngle = self.send_telem_request(self.telem.apWind)
 
     def handshake_with_arduino(self, sleep_time = 1, print_handshake_message = False):
         """
@@ -67,20 +73,28 @@ class Telemetry():
         self.grandCentral.timeout = timeout
 
     def send_telem_request(self, command):
+        """
+            Ask grandCentral to send telemetry data
+            based on a specified command and return
+            the response
+
+        """
         self.grandCentral.write(bytes([command]))
         data = self.grandCentral.read_until()
         data = data.decode()
         return data
 
+# Example call of Telemetry class
 BoatTelem = Telemetry()
+print(BoatTelem.recvGPSLat)
+print(BoatTelem.recvGPSLon)
+print(BoatTelem.recvVesselBearing)
+print(BoatTelem.recvWindSpeed)
+print(BoatTelem.recvAparentWindAngle)
+
 lat = BoatTelem.send_telem_request(BoatTelem.telem.Lat)
-print(lat)
 lon = BoatTelem.send_telem_request(BoatTelem.telem.Lon)
-print(lon)
 vesselB = BoatTelem.send_telem_request(BoatTelem.telem.relBearing)
-print(vesselB)
 WSPD = BoatTelem.send_telem_request(BoatTelem.telem.windSpeed)
-print(WSPD)
 AWA = BoatTelem.send_telem_request(BoatTelem.telem.apWind)
-print(AWA)
 # while True:
