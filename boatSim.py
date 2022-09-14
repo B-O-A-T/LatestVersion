@@ -39,7 +39,7 @@ from CoursePlotter import CoursePlotter
 from utilities import Tools
 import threading
 from Compass import Compass
-from turtle import *
+import time
 #****************************************************************#
 #
 #
@@ -110,6 +110,9 @@ class LynxLakeSimulation(tk.Frame):
         self.compass.vesselBearing = self.CourseBoi.set_path_type()
         self.boatAngles, self.boatSpeeds = self.CourseBoi.define_speed(WIND_SPEED_KNOTTS)
         self.desHeading = self.compass.vesselBearing
+        self.timer1 = time.perf_counter()
+        self.realDist = 0
+        self.totalTraveled = 0
 
     def init_sim_utility(self):
         """
@@ -327,7 +330,7 @@ class LynxLakeSimulation(tk.Frame):
         self.LocationLon.delete('1.0', END)
         self.LocationLon.insert(END, self.gpsLng)
         self.BoatSpeed.delete('1.0', END)
-        self.BoatSpeed.insert(END, self.boatSpeed * 364000 / 1.6781)
+        self.BoatSpeed.insert(END, self.boatSpeed * 111111) #* 364000 / 1.6781)
 
     def move_cycle(self):
         """
@@ -359,9 +362,14 @@ class LynxLakeSimulation(tk.Frame):
             self.angleOfSail = self.SAK.mod360(self.compass.windRelNorth - self.compass.vesselBearing)
             rel_angle_pos = self.find_nearest(self.boatAngles, self.angleOfSail)
             # print(self.boatAngles[rel_angle_pos])
-            self.boatSpeed = (self.boatSpeeds[rel_angle_pos] * 1.6781)/364000
-            dist = self.boatSpeed * dt
-
+            self.boatSpeed = ((self.boatSpeeds[rel_angle_pos] ))/111111
+            dist = (self.boatSpeed * dt) * 0.514444444444
+            self.realDist = dist
+            self.totalTraveled = self.totalTraveled + self.realDist
+            # if(time.perf_counter() - self.timer1 > 10):
+            #     self.timer1 = time.perf_counter()
+            #     print("Boat has traveled " + str((self.totalTraveled/0.514444444444)*111111) + "Km in 10 seconds")
+            #     self.totalTraveled = 0
             lat1 = self.SAK.deg2rad(self.gpsLat)
             lng1 = self.SAK.deg2rad(self.gpsLng)
             bearing = self.SAK.deg2rad(self.compass.vesselBearing)

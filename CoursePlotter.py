@@ -9,6 +9,7 @@ from Cartographer import Cartographer
 from Wayfinder import WayFinder
 from utilities import Tools
 import time
+from glob import *
 
 class NoGoZone():
     def __init__(self, adjWindPos, adjWindNeg):
@@ -52,14 +53,14 @@ class CoursePlotter():
         self.timer2 = time.perf_counter()
         self.jibeCooldown = 0
 
-
     def find_course(self,x ,y, currBearing):
         """
             put it all together to call from main and decide how we move
         """
-        # self.desBear = desBearing
         if(not self.inJibeManeuver and not self.inTackManeuver):
-            bearing = self.is_safe(x, y, currBearing)
+            self.is_safe(x, y, currBearing)
+            self.shore = self.Map.get_object_direction()
+            bearing = currBearing
         elif(self.inJibeManeuver):
             # print(self.desBear) # Testing statement
             bearing = self.jibe(currBearing)
@@ -125,17 +126,17 @@ class CoursePlotter():
         """
         self.Map.update_boat_pos(x,y,bearing)
         self.directPathOrient = self.SAK.direction_lookup(self.pos[0], self.pos[1], self.end[0], self.end[1])
-        if(time.perf_counter() - self.timer2 > 2):
-            self.timer2 = time.perf_counter()
-            print(self.directPathOrient)
-            print(self.dist)
+        # if(time.perf_counter() - self.timer2 > 2): #Debug
+        #     self.timer2 = time.perf_counter()
+        #     print(self.directPathOrient)
+        #     print(self.dist)
         if(not self.final_adjust):
             if(self.dist < 100 and not self.in_no_go_range(self.SAK.mod360(self.directPathOrient-10))):
                 self.beat_adjust()
                 self.desBear = self.SAK.mod360(self.directPathOrient)
                 return bearing
             if(not self.Map.check_shoreline() and time.perf_counter() - self.jibeCooldown > 5):
-                bearing = self.adjust_path(bearing)
+                bearing  = self.adjust_path(bearing)
             return bearing
         else:
             return bearing
@@ -185,18 +186,24 @@ class CoursePlotter():
             unsafe right now, does not include jibe vs
             tack
         """
-        if(self.beat_dir == "right"):
+        if(self.shore == RIGHT):
             self.beat_dir = "left"
             headingChange = self.SAK.mod360(self.NoGoRange.min - 12)
             self.desBear = self.SAK.mod360(self.NoGoRange.min - 12)
             self.determine_maneuver(self.beat_dir, headingChange)
             return headingChange
-        elif(self.beat_dir == "left"):
+        elif(self.shore == LEFT):
             self.beat_dir = "right"
             headingChange = self.SAK.mod360(self.NoGoRange.max + 12)
             self.desBear = self.SAK.mod360(self.NoGoRange.max + 12)
             self.determine_maneuver(self.beat_dir, headingChange)
             return headingChange
+        else:
+            self.beat_dir = "right"
+            headingChange = self.SAK.mod360(self.NoGoRange.max + 12)
+            self.desBear = self.SAK.mod360(self.NoGoRange.max + 12)
+            self.determine_maneuver(self.beat_dir, headingChange)
+
 
     def is_collison(self):
         """

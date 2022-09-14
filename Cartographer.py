@@ -10,14 +10,16 @@
 import pandas as pd
 import numpy as np
 from shapely.geometry import Point, LineString, Polygon
+from shapely.geometry import MultiPoint
+from shapely.geometry import MultiLineString
 from utilities import Tools
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
 from gtts import gTTS
 import os
 import time
-# import geopandas as gpd
-# from pyproj import CRS
+from shapely.ops import nearest_points
+from glob import *
 
 class Cartographer():
     """
@@ -32,19 +34,18 @@ class Cartographer():
         self.boatWidth = self.SAK.ft_to_latlon(1.5)
         self.boatLength = self.SAK.ft_to_latlon(6)
         self.safetyThresh = self.SAK.ft_to_latlon(shoreThresh) # defines the distance in feet that is safe
-        # print(self.safetyThresh)
+        self.leftPoint = Point()
+        self.rightPoint = Point()
+        self.forwardPoint = Point()
+        self.rearPoint = Point()
         LakeEdgesTemp = pd.read_csv('OutputBoundaries.csv') # read the definition of the lake from a csv
         LakeEdgesTemp = np.array(LakeEdgesTemp) # convert csv values into a numpy array
         self.LakeEdges = self.create_polygon_from_csv(LakeEdgesTemp) # create a polygon object that represents the lake
         self.listOfLakeEdgesLon, self.listOfLakeEdgesLat = self.create_polygon_from_csv(LakeEdgesTemp, get_list =  True)
         self.update_boat_pos(34.515501, -112.384901, 0)
         self.timer1 = time.perf_counter()
+        self.shoreDir = BEHIND
 
-    def init_geopands(self):
-        # Create GeoDataFrame
-        lynxLake = gpd.GeoDataFrame([self.lakeEdges], geometry='geometry', crs={'init': 'epsg:4326'}, columns=['geometry'])
-        # Print
-        # print(lynxLake)
 
     def create_polygon_from_csv(self, temp_container, get_list = False):
             """
@@ -85,16 +86,27 @@ class Cartographer():
 
     def check_shoreline(self):
         """
-            Check how close the boat is to
+            Check how close the boat is to,
             the shoreline
         """
         distShore = self.boatPos.exterior.distance(self.LakeEdges.exterior)
+        self.centerX, self.centerY = self.boatPos.centroid.x, self.boatPos.centroid.y
         # print(distShore)
         if(distShore - self.safetyThresh < 0):
             # print("Warning, shore collision imminent!")
+            p1, p2 = nearest_points(self.boatPos.exterior, self.LakeEdges.exterior)
+            if(p2.x > self.centerX):
+                self.shoreDir = RIGHT
+            elif(p2.x < self.centerX):
+                self.shoreDir = LEFT
+            elif(p2.y > self.centerY):
+                self.shoreDir = FORWARD
             return False
         else:
             return True
+
+    def get_object_direction(self):
+        return self.shoreDir
 
     def check_collison(self):
         """

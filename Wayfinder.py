@@ -1,6 +1,6 @@
 #*******************************************************************************************************************#
 #  Project: Prescott Yacht Club - Autonomous Sailing Project
-#  File: Wayfinder.py
+#  File: Wayfinderb .py
 #  Author: Lorenzo Kearns
 #
 #  Purpose: Find the ideal heading based on polar charts and sensor data

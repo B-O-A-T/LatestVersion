@@ -85,10 +85,10 @@ class Telemetry():
         return data
 
 # Example call of Telemetry class
-BoatTelem = Telemetry()
-print(BoatTelem.recvGPSLat)
-print(BoatTelem.recvGPSLon)
-print(BoatTelem.recvVesselBearing)
+# BoatTelem = Telemetry()
+# print(BoatTelem.recvGPSLat)
+# print(BoatTelem.recvGPSLon)
+# print(BoatTelem.recvVesselBearing)
 print(BoatTelem.recvWindSpeed)
 print(BoatTelem.recvAparentWindAngle)
 
