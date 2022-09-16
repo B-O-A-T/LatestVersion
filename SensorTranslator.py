@@ -9,6 +9,8 @@ import warnings
 import serial
 import serial.tools.list_ports
 import time
+from math import *
+import numpy
 
 class TelemCommands():
     """

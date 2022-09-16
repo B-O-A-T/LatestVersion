@@ -19,6 +19,8 @@ import re
     WayFinder is the weakest class currently and needs alot of restructuring and development.
 """
 
+
+
 class WayFinder():
     """
         Class object is a part of a larger structure,
