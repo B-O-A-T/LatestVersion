@@ -59,8 +59,8 @@ for the duration of the program, but can be changed to test different conditions
 STARTING_POS =   34.515501, -112.3849601
 WAYPOINT1 =   34.521701, -112.3858601
 WIND_SPEED_KNOTTS = 20
-SCALE = 5
-MAX_PATH_DEVIATION = 55
+SCALE = 2
+MAX_PATH_DEVIATION = 50
 #
 """
  Strict Constants:
@@ -165,10 +165,6 @@ class LynxLakeSimulation(tk.Frame):
         self.directLabel.insert(END, "direct path(deg)")
         self.direct = Text(frame, height=1, width=10)
         self.direct.pack(side = LEFT)
-        # self.finishedLab = Text(frame, height=1, width=40)
-        # self.finishedLab.pack(side = LEFT)
-        # self.finishedLab.delete('1.0', END)
-        # self.finishedLab.insert(END, "Waypoint Reached, Simulation complete")
         self.c = Canvas(root, width=W, height=H, bg="green", scrollregion=(0, 0, MAXW, MAXH))
 
     def init_sim_conditions(self):
@@ -177,8 +173,10 @@ class LynxLakeSimulation(tk.Frame):
             sets up wind and initial bearing, stuff like that
         """
         trueHeading = 0
-        x = random.randint(360)
-        trueWind = self.SAK.mod360(x)
+        # random.seed()
+        # x = random.randint(360)
+        # trueWind = self.SAK.mod360(x)
+        trueWind = 160
         self.compass = Compass(trueHeading, trueWind)
         self.gpsLat, self.gpsLng = STARTING_POS
         self.gpsLatPrev, self.gpsLngPrev = self.gpsLat, self.gpsLng
@@ -187,10 +185,9 @@ class LynxLakeSimulation(tk.Frame):
         self.rudder = 0.0
         self.sailPos = 0.0
         self.directPath = 0
-        # self.x_prev, self.y_prev = self.LatLontoXY(self.gpsLat, self.gpsLng)
 
     def changeWind(self):
-        if(time.perf_counter() - self.timer1 > 300): #Debug
+        if(time.perf_counter() - self.timer1 > 10): #Debug
             self.timer1 = time.perf_counter()
             x = random.randint(360)
             self.compass.windRelNorth = self.SAK.mod360(x)
@@ -368,7 +365,7 @@ class LynxLakeSimulation(tk.Frame):
             devFromPathDist, self.directPath = self.CourseBoi.is_past_beat_max(STARTING_POS, WAYPOINT1, self.gpsLat, self.gpsLng)
             # print(devFromPathDist)
             # print(self.desHeading)
-            self.changeWind()
+            # self.changeWind()
             self.adjustRudder()
             self.move_forward()
 
@@ -392,6 +389,9 @@ class LynxLakeSimulation(tk.Frame):
             file_name = 'BrokeMansMC_' + date + '.png'     #file name
             path = dir_path + file_name
             print(path)
+            plt.ylim(34.515, 34.522)
+            plt.xlim(-112.388, -112.383)
+            plt.title("Simulated Travel Path with Adaptive Path Software")
             plt.savefig(path)
             plt.show()
 

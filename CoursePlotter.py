@@ -121,10 +121,16 @@ class CoursePlotter():
             put it all together to call from main and decide how we move
         """
         self.pathDir = self.find_dir_traveling(currBearing)
-        # if(time.perf_counter() - self.timer2 > 3): #Debug
-        #     self.timer2 = time.perf_counter()
-        #     print("Traveling " + str(self.pathDir))
-        #     print("Deviation from path is: " + str(abs(self.devFromPath)))
+        if(time.perf_counter() - self.timer2 > 3): #Debug
+            self.timer2 = time.perf_counter()
+            # print("Star Beam Optimal" + str(self.POS.beamReach.star.optimal))
+            # print("Star Beam min" + str(self.POS.beamReach.star.min))
+            # print("Star Beam max" + str(self.POS.beamReach.star.max))
+            # print("Port Beam Optimal" + self.POS.beamReach.port.optimal)
+            # print("Port Beam Optimal" + self.POS.beamReach.port.min)
+            # print("Port Beam Optimal" + self.POS.beamReach.port.max)
+            # print("Traveling " + str(self.pathDir))
+            # print("Deviation from path is: " + str(abs(self.devFromPath)))
         if(not self.inJibeManeuver and not self.inTackManeuver):
             self.should_heading_change(x, y, currBearing)
             self.shore = self.Map.get_object_direction()
@@ -165,20 +171,16 @@ class CoursePlotter():
         # print("I am Trying to jibe")
         self.jibeCooldown = time.perf_counter()
         if(self.beat_dir == "right"):
-            if(not math.isclose(currBear, self.desBear, abs_tol = 1)):
-                # print(abs(currBear - self.desBear))
-                # print(currBear, self.desBear)
-                currBear -= 1
-                # print(currBear)
+            if(not math.isclose(currBear, self.desBear, abs_tol = 1.5)):
+                currBear += 1
                 return currBear
             else:
                 self.currentlyBeating = False
                 self.inJibeManeuver = False
                 return currBear
         elif(self.beat_dir == "left"):
-            if(not math.isclose(currBear, self.desBear, abs_tol = 1)):
-                currBear += 1
-                # print(currBear, self.desBear)
+            if(not math.isclose(currBear, self.desBear, abs_tol = 1.5)):
+                currBear -= 1
                 return currBear
             else:
                 self.currentlyBeating = False
@@ -193,16 +195,16 @@ class CoursePlotter():
         """
         # print("I am Trying to tack")
         if(self.tackDir == "left"):
-            if(not math.isclose(currBear, self.desBear, abs_tol = 1)):
-                currBear -= 1
+            if(not math.isclose(currBear, self.desBear, abs_tol = 1.5)):
+                currBear += 1
                 return currBear
             else:
                 self.currentlyBeating = False
                 self.inTackManeuver = False
                 return currBear
         elif(self.tackDir == "right"):
-            if(not math.isclose(currBear, self.desBear, abs_tol = 1)):
-                currBear += 1
+            if(not math.isclose(currBear, self.desBear, abs_tol = 1.5)):
+                currBear -= 1
                 return currBear
             else:
                 self.currentlyBeating = False
@@ -383,8 +385,8 @@ class CoursePlotter():
             return 0, 0
 
     def is_between_angles(self, testAngle, targetAngle, tolerance):
-        # print("test angle is: " + str(testAngle))
-        # print("is it between: " + str(targetAngle - tolerance) + "and: " + str(targetAngle + tolerance))
+        print("test angle is: " + str(testAngle))
+        print("is it between: " + str(targetAngle - tolerance) + "and: " + str(targetAngle + tolerance))
         anglediff = self.SAK.mod360(testAngle - targetAngle + 180 + 360) - 180
         if (anglediff <= tolerance and anglediff >= -tolerance):
             # print("True")
