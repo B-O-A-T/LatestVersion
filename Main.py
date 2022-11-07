@@ -11,8 +11,8 @@
 from CoursePlotter import CoursePlotter
 from utilities import Tools
 from Compass import Compass
-import time
 from SensorTranslator import Telemetry
+import time
 #****************************************************************#
 
 class sailController():
