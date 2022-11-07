@@ -31,7 +31,7 @@ Likely cause and potential fix:
 # Includes:
 import tkinter as tk
 from tkinter import *
-import pandas as pd
+import pandas as p
 import numpy as np
 from numpy import random
 from math import *
@@ -59,7 +59,7 @@ for the duration of the program, but can be changed to test different conditions
 STARTING_POS =   34.515501, -112.3849601
 WAYPOINT1 =   34.521701, -112.3858601
 WIND_SPEED_KNOTTS = 20
-SCALE = 2
+SCALE = 10
 MAX_PATH_DEVIATION = 50
 #
 """
@@ -173,10 +173,10 @@ class LynxLakeSimulation(tk.Frame):
             sets up wind and initial bearing, stuff like that
         """
         trueHeading = 0
-        # random.seed()
-        # x = random.randint(360)
-        # trueWind = self.SAK.mod360(x)
-        trueWind = 160
+        random.seed()
+        x = random.randint(360)
+        trueWind = self.SAK.mod360(x)
+        # trueWind = 160
         self.compass = Compass(trueHeading, trueWind)
         self.gpsLat, self.gpsLng = STARTING_POS
         self.gpsLatPrev, self.gpsLngPrev = self.gpsLat, self.gpsLng
@@ -365,7 +365,7 @@ class LynxLakeSimulation(tk.Frame):
             devFromPathDist, self.directPath = self.CourseBoi.is_past_beat_max(STARTING_POS, WAYPOINT1, self.gpsLat, self.gpsLng)
             # print(devFromPathDist)
             # print(self.desHeading)
-            # self.changeWind()
+            self.changeWind()
             self.adjustRudder()
             self.move_forward()
 

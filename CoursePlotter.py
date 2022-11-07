@@ -121,16 +121,16 @@ class CoursePlotter():
             put it all together to call from main and decide how we move
         """
         self.pathDir = self.find_dir_traveling(currBearing)
-        if(time.perf_counter() - self.timer2 > 3): #Debug
-            self.timer2 = time.perf_counter()
-            # print("Star Beam Optimal" + str(self.POS.beamReach.star.optimal))
-            # print("Star Beam min" + str(self.POS.beamReach.star.min))
-            # print("Star Beam max" + str(self.POS.beamReach.star.max))
-            # print("Port Beam Optimal" + self.POS.beamReach.port.optimal)
-            # print("Port Beam Optimal" + self.POS.beamReach.port.min)
-            # print("Port Beam Optimal" + self.POS.beamReach.port.max)
-            # print("Traveling " + str(self.pathDir))
-            # print("Deviation from path is: " + str(abs(self.devFromPath)))
+        # if(time.perf_counter() - self.timer2 > 3): #Debug
+        #     self.timer2 = time.perf_counter()
+        #     # print("Star Beam Optimal" + str(self.POS.beamReach.star.optimal))
+        #     # print("Star Beam min" + str(self.POS.beamReach.star.min))
+        #     # print("Star Beam max" + str(self.POS.beamReach.star.max))
+        #     # print("Port Beam Optimal" + self.POS.beamReach.port.optimal)
+        #     # print("Port Beam Optimal" + self.POS.beamReach.port.min)
+        #     # print("Port Beam Optimal" + self.POS.beamReach.port.max)
+        #     # print("Traveling " + str(self.pathDir))
+        #     # print("Deviation from path is: " + str(abs(self.devFromPath)))
         if(not self.inJibeManeuver and not self.inTackManeuver):
             self.should_heading_change(x, y, currBearing)
             self.shore = self.Map.get_object_direction()
@@ -244,15 +244,13 @@ class CoursePlotter():
             Determine how to adjust bearing based
             on the mode of travel in effect
         """
-        # if(time.perf_counter() - self.timer1 > 1):
-        # self.timer1 = time.perf_counter()
+        # fixes edge cases
         self.inJibeManeuver = False
         self.inTackManeuver = False
+        #Check if we need are sailing into wind or not
         if(self.in_no_go_range(self.directPathOrient)):
-            # print("beating required")
             bearing = self.beat_adjust(bearing)
         else:
-            # print("We Can go straight now")
             bearing = self.straight_adjust(bearing)
         return bearing
 
@@ -262,18 +260,18 @@ class CoursePlotter():
             unsafe right now, does not include jibe vs
             tack
         """
-        if(not self.safe):
-            if(self.shore == RIGHT and self.pathDir == EAST):
+        if(not self.safe): # check if we are near a shoreline
+            if(self.shore == RIGHT and self.pathDir == EAST): # check we are moving towards the object
                 self.beat_dir = "left"
                 self.desBear = self.SAK.mod360(self.NoGoRange.min - 12)
             elif(self.shore == LEFT and self.pathDir == WEST):
                 self.beat_dir = "right"
                 self.desBear = self.SAK.mod360(self.NoGoRange.max + 12)
-            else:
+            else: # if we are not moving towards the object it does not matter that it is close so we hold current bearing
                 self.desBear = currBearing
             self.inJibeManeuver = True
             return self.desBear
-        elif(self.deviated):
+        elif(self.deviated): # check if we have traveled past the max distance from the ghost line
             if(self.devFromPath > 0):
                 self.beat_dir = "left"
                 self.desBear = self.SAK.mod360(self.NoGoRange.min - 12)
@@ -283,7 +281,7 @@ class CoursePlotter():
             self.inJibeManeuver = True
             self.deviated = False
             return self.desBear
-        else:
+        else: #
             if(self.pathDir == EAST):
                 self.beat_dir = "right"
                 self.desBear = self.SAK.mod360(self.NoGoRange.min - 12)
@@ -303,10 +301,8 @@ class CoursePlotter():
             if(self.shore == RIGHT and self.pathDir == EAST):
                 self.tackDir = "left"
                 self.desBear = self.SAK.mod360(currBearing - 45)
-                print("I am trying to go left")
             elif(self.shore == LEFT and self.pathDir == WEST):
                 self.tackDir = "right"
-                print("I am trying to go right")
                 self.desBear = self.SAK.mod360(currBearing + 45)
             else:
                 self.desBear = currBearing
@@ -339,57 +335,45 @@ class CoursePlotter():
         if(self.is_between_angles(self.POS.beamReach.star.optimal, self.directPathOrient, 2) or self.is_between_angles(self.POS.beamReach.port.optimal, self.directPathOrient, 2)):
             return self.directPathOrient, self.directPathOrient
         elif(self.is_between_angles(self.POS.broadReach.star.optimal, self.directPathOrient, tolerance) and self.is_between_angles(self.POS.broadReach.port.optimal, self.directPathOrient, tolerance)):
-            # print("Broad reach is a go!")
             return self.POS.broadReach.star.optimal, self.POS.broadReach.port.optimal
         elif(self.is_between_angles(self.POS.closeReach.star.optimal, self.directPathOrient, tolerance) and self.is_between_angles(self.POS.closeReach.port.optimal, self.directPathOrient, tolerance)):
-            # print("closeReach it is")
             return self.POS.closeReach.star.optimal, self.POS.closeReach.port.optimal
         elif(self.is_between_angles(self.POS.broadReach.star.optimal, self.directPathOrient, tolerance) and self.is_between_angles(self.POS.beamReach.star.optimal, self.directPathOrient, tolerance)):
-            # print("Beam broad")
             return self.POS.broadReach.star.optimal, self.POS.beamReach.star.optimal
         elif(self.is_between_angles(self.POS.closeReach.star.optimal, self.directPathOrient, tolerance) and self.is_between_angles(self.POS.beamReach.star.optimal, self.directPathOrient, tolerance)):
-            # print("Beam Close")
             return self.POS.closeReach.star.optimal, self.POS.beamReach.star.optimal
         elif(self.is_between_angles(self.POS.beamReach.star.optimal, self.directPathOrient, tolerance) and self.is_between_angles(self.POS.trainingRun.star.optimal, self.directPathOrient, tolerance)):
-            # print("Beam train Coming")
             return self.POS.beamReach.star.optimal, self.POS.trainingRun.star.optimal
         elif(self.is_between_angles(self.POS.broadReach.star.optimal, self.directPathOrient, tolerance) and self.is_between_angles(self.POS.closeReach.star.optimal, self.directPathOrient, tolerance)):
-            # print("Broad close wombo combo")
             return self.POS.broadReach.star.optimal, self.POS.closeReach.star.optimal
         elif(self.is_between_angles(self.POS.broadReach.port.optimal, self.directPathOrient, tolerance) and self.is_between_angles(self.POS.beamReach.port.optimal, self.directPathOrient, tolerance)):
-            # print("Beam broad")
             return self.POS.broadReach.port.optimal, self.POS.beamReach.port.optimal
         elif(self.is_between_angles(self.POS.closeReach.port.optimal, self.directPathOrient, tolerance) and self.is_between_angles(self.POS.beamReach.port.optimal, self.directPathOrient, tolerance)):
-            # print("Beam Close")
             return self.POS.closeReach.port.optimal, self.POS.beamReach.port.optimal
         elif(self.is_between_angles(self.POS.beamReach.port.optimal, self.directPathOrient, tolerance) and self.is_between_angles(self.POS.trainingRun.port.optimal, self.directPathOrient, tolerance)):
-            # print("Beam train Coming")
             return self.POS.beamReach.port.optimal, self.POS.trainingRun.port.optimal
         elif(self.is_between_angles(self.POS.broadReach.port.optimal, self.directPathOrient, tolerance) and self.is_between_angles(self.POS.closeReach.port.optimal, self.directPathOrient, tolerance)):
-            # print("Broad close wombo combo")
             return self.POS.broadReach.port.optimal, self.POS.closeReach.port.optimal
         elif(self.is_between_angles(self.POS.broadReach.port.optimal, self.directPathOrient, tolerance) and self.is_between_angles(self.POS.trainingRun.star.optimal, self.directPathOrient, tolerance)):
-            # print("Broad Training")
             return self.POS.broadReach.port.optimal, self.POS.trainingRun.star.optimal
         elif(self.is_between_angles(self.POS.broadReach.port.optimal, self.directPathOrient, tolerance) and self.is_between_angles(self.POS.trainingRun.port.optimal, self.directPathOrient, tolerance)):
-            # print("Broad Training")
             return self.POS.broadReach.star.optimal, self.POS.trainingRun.port.optimal
         elif(self.is_between_angles(self.POS.trainingRun.star.optimal, self.directPathOrient, tolerance) and self.is_between_angles(self.POS.trainingRun.port.optimal, self.directPathOrient, tolerance)):
-            # print("We making a training run")
             return self.POS.trainingRun.star.optimal, self.POS.trainingRun.port.optimal
         elif(self.is_between_angles(self.POS.Run.star.optimal, self.directPathOrient, tolerance) and self.is_between_angles(self.POS.Run.port.optimal, self.directPathOrient, tolerance)):
-            # print("Buckle in boys shes going on a full run!")
             return self.POS.Run.star.optimal, self.POS.Run.port.optimal
         else:
-            print("Big Error")
             return 0, 0
 
     def is_between_angles(self, testAngle, targetAngle, tolerance):
-        print("test angle is: " + str(testAngle))
-        print("is it between: " + str(targetAngle - tolerance) + "and: " + str(targetAngle + tolerance))
+        """
+            Checks if an angle is within a desired range. This
+            allows us to know
+        """
+        # print("test angle is: " + str(testAngle)) # debugging use only
+        # print("is it between: " + str(targetAngle - tolerance) + "and: " + str(targetAngle + tolerance)) # debugging use only
         anglediff = self.SAK.mod360(testAngle - targetAngle + 180 + 360) - 180
         if (anglediff <= tolerance and anglediff >= -tolerance):
-            # print("True")
             return True
         else:
             return False

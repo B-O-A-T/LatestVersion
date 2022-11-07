@@ -17,11 +17,11 @@ class TelemCommands():
     """
     def __init__(self):
         self.initHandshake = 0
-        self.Lat = 1
-        self.Lon = 2
-        self.relBearing = 3
-        self.windSpeed = 4
-        self.apWind = 5
+        # self.Lat = 1
+        # self.Lon = 2
+        # self.relBearing = 3
+        self.windSpeed = 1
+        self.apWind = 2
 
 class Telemetry():
     """
@@ -84,17 +84,17 @@ class Telemetry():
         data = data.decode()
         return data
 
-# Example call of Telemetry class
-# BoatTelem = Telemetry()
-# print(BoatTelem.recvGPSLat)
-# print(BoatTelem.recvGPSLon)
-# print(BoatTelem.recvVesselBearing)
-print(BoatTelem.recvWindSpeed)
-print(BoatTelem.recvAparentWindAngle)
-
-lat = BoatTelem.send_telem_request(BoatTelem.telem.Lat)
-lon = BoatTelem.send_telem_request(BoatTelem.telem.Lon)
-vesselB = BoatTelem.send_telem_request(BoatTelem.telem.relBearing)
-WSPD = BoatTelem.send_telem_request(BoatTelem.telem.windSpeed)
-AWA = BoatTelem.send_telem_request(BoatTelem.telem.apWind)
-# while True:
+# # Example call of Telemetry class
+# # BoatTelem = Telemetry()
+# # print(BoatTelem.recvGPSLat)
+# # print(BoatTelem.recvGPSLon)
+# # print(BoatTelem.recvVesselBearing)
+# print(BoatTelem.recvWindSpeed)
+# print(BoatTelem.recvAparentWindAngle)
+#
+# lat = BoatTelem.send_telem_request(BoatTelem.telem.Lat)
+# lon = BoatTelem.send_telem_request(BoatTelem.telem.Lon)
+# vesselB = BoatTelem.send_telem_request(BoatTelem.telem.relBearing)
+# WSPD = BoatTelem.send_telem_request(BoatTelem.telem.windSpeed)
+# AWA = BoatTelem.send_telem_request(BoatTelem.telem.apWind)
+# # while True:
