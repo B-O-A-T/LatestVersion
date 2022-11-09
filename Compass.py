@@ -11,5 +11,5 @@ class Compass():
         self.vesselBearing = initialBearing
         self.windRelNorth = trueWindInitial
 
-    def boat_frame_to_inertial(self):
+    def boat_frame_to_inertial(self, u):
         raise NotImplemented

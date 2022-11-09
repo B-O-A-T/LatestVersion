@@ -244,7 +244,7 @@ class LynxLakeSimulation(tk.Frame):
         """
         self.paused = not self.paused
 
-    def adjustRudder(self):
+    def adjustRudder(self): # Control function
         """
             Determine where to set the rudder based on desired heading
         """
@@ -255,7 +255,7 @@ class LynxLakeSimulation(tk.Frame):
         elif (self.compass.vesselBearing > self.desHeading):
             self.rudder = RUDDER_MIN_ANGLE
 
-    def adjust_sail(self):
+    def adjust_sail(self):   # Control function
         self.apparentWind = self.SAK.mod360(self.compass.windRelNorth - self.compass.vesselBearing)
         # print(self.apparentWind)
         if(not(self.apparentWind > SAIL_MAX and self.apparentWind < self.SAK.mod360(SAIL_MIN))):
@@ -355,7 +355,7 @@ class LynxLakeSimulation(tk.Frame):
         self.direct.delete('1.0', END)
         self.direct.insert(END, self.directPath)
 
-    def move_cycle(self):
+    def move_cycle(self):    # Control function
         """
             Threaded loop for moving the position of the boat and rudder.
             Also calls CoursePlotter class to determine the course response of the boat
@@ -371,7 +371,7 @@ class LynxLakeSimulation(tk.Frame):
 
         threading.Timer(dt, self.move_cycle).start()
 
-    def move_forward(self):
+    def move_forward(self):  # Control function
         """
             Handles the operation of moving the boat forward, does this by calculating the boats speed as a relation to the apparent wind angle.
             This speed is used in concurrance with the time step constant dt to determine how far the boat object should be translated.

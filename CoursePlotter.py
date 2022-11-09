@@ -121,16 +121,6 @@ class CoursePlotter():
             put it all together to call from main and decide how we move
         """
         self.pathDir = self.find_dir_traveling(currBearing)
-        # if(time.perf_counter() - self.timer2 > 3): #Debug
-        #     self.timer2 = time.perf_counter()
-        #     # print("Star Beam Optimal" + str(self.POS.beamReach.star.optimal))
-        #     # print("Star Beam min" + str(self.POS.beamReach.star.min))
-        #     # print("Star Beam max" + str(self.POS.beamReach.star.max))
-        #     # print("Port Beam Optimal" + self.POS.beamReach.port.optimal)
-        #     # print("Port Beam Optimal" + self.POS.beamReach.port.min)
-        #     # print("Port Beam Optimal" + self.POS.beamReach.port.max)
-        #     # print("Traveling " + str(self.pathDir))
-        #     # print("Deviation from path is: " + str(abs(self.devFromPath)))
         if(not self.inJibeManeuver and not self.inTackManeuver):
             self.should_heading_change(x, y, currBearing)
             self.shore = self.Map.get_object_direction()
