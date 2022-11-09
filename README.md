@@ -1,4 +1,4 @@
-# PrescottYachtClub-Simulation
+# B.O.A.T. mission software
 A brief overview of the Simulation structure:
 - boatSim.py 
   - glob.py  
