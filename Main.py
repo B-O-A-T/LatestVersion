@@ -25,8 +25,6 @@ import csv
 #         raise NotImplemented
 # class rudderController():
 #     raise NotImplemented
-
-# begin main code:
 class main():
     def __init__(self):
         self.timer1 = time.perf_counter()
