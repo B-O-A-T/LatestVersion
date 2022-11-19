@@ -15,7 +15,6 @@ from shapely.geometry import MultiLineString
 from utilities import Tools
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
-from gtts import gTTS
 import os
 import time
 from shapely.ops import nearest_points
@@ -31,8 +30,8 @@ class Cartographer():
             Define initial conditions when class is called
         """
         self.SAK = Tools() # SAK is shorthand for Swiss Army Knife which the Tools class essentially is
-        self.boatWidth = self.SAK.ft_to_latlon(1.5)
-        self.boatLength = self.SAK.ft_to_latlon(6)
+        self.boatWidth = self.SAK.ft_to_latlon(2)
+        self.boatLength = self.SAK.ft_to_latlon(7)
         self.safetyThresh = self.SAK.ft_to_latlon(shoreThresh) # defines the distance in feet that is safe
         LakeEdgesTemp = pd.read_csv('OutputBoundaries.csv') # read the definition of the lake from a csv
         LakeEdgesTemp = np.array(LakeEdgesTemp) # convert csv values into a numpy array

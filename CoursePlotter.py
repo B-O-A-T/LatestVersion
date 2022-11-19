@@ -6,7 +6,6 @@
 #  Purpose: Finalize and set a true heading for the ship, also contain future waypoints
 #*******************************************************************************************************************#
 from Cartographer import Cartographer
-from Wayfinder import WayFinder
 from utilities import Tools
 import time
 from glob import *
@@ -71,7 +70,6 @@ class CoursePlotter():
         self.inTackManeuver = False
         self.currBear = 0
         self.desBear = 0
-        self.Way = WayFinder()
         self.Map = Cartographer(80)
         self.SAK = Tools()
         self.POS = PointOfSailing(TWA)
@@ -405,6 +403,3 @@ class CoursePlotter():
         self.dist = self.SAK.Distance(posLat, posLon, end[0], end[1])
         return self.dist
 
-    def define_speed(self, TWS):
-        wa, bsp = self.Way.create_lookup_table(TWS)
-        return wa, bsp

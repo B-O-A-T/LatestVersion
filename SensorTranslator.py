@@ -35,9 +35,9 @@ class Telemetry():
         self.init_object_telem_variables()
 
     def init_object_telem_variables(self):
-        self.recvGPSLat = self.send_telem_request(self.telem.Lat)
-        self.recvGPSLon = self.send_telem_request(self.telem.Lon)
-        self.recvVesselBearing = self.send_telem_request(self.telem.relBearing)
+        # self.recvGPSLat = self.send_telem_request(self.telem.Lat)
+        # self.recvGPSLon = self.send_telem_request(self.telem.Lon)
+        # self.recvVesselBearing = self.send_telem_request(self.telem.relBearing)
         self.recvWindSpeed = self.send_telem_request(self.telem.windSpeed)
         self.recvAparentWindAngle = self.send_telem_request(self.telem.apWind)
 
@@ -82,7 +82,7 @@ class Telemetry():
         self.grandCentral.write(bytes([command]))
         data = self.grandCentral.read_until()
         data = data.decode()
-        return data
+        return float(data)
 
 # # Example call of Telemetry class
 # # BoatTelem = Telemetry()
