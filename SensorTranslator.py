@@ -28,7 +28,6 @@ class Telemetry():
     def __init__(self):
         self.telem = TelemCommands()
         self.grandCentral = serial.Serial('COM5', 115200, timeout=1)
-        # self.handshake_with_arduino()
 
     def handshake_with_arduino(self, sleep_time = 1, print_handshake_message = False):
         """
