@@ -62,7 +62,9 @@ class Cartographer():
         """
             pass the current position of the boat
             and create a polygon object to
-            represent it
+            represent it, Polygon object 
+            refers to the Polygon class from shapely 
+            refrenced above 
         """
         boat_coords =  [
                   self.SAK.rotate(x, y - self.boatLength/2, self.SAK.mod360(trueHeading), x, y),
@@ -82,7 +84,13 @@ class Cartographer():
     def check_shoreline(self):
         """
             Check how close the boat is to,
-            the shoreline
+            the shoreline. if the boat is close 
+            i.e. it exceeds the closeness value 
+            than we say that the boat is close
+            to the shore. The boat being close to the shore 
+            means the boat is close to the shore so we say that 
+            the boat must be close to ths shore and that
+            ... is a bad thing. 
         """
         distShore = self.boatPos.exterior.distance(self.LakeEdges.exterior)
         self.centerX, self.centerY = self.boatPos.centroid.x, self.boatPos.centroid.y
@@ -101,6 +109,12 @@ class Cartographer():
             return True
 
     def get_object_direction(self):
+        """
+            returns the direction of the shore,
+            if the shore is to the left, this function 
+            will return values indicating the shore is 
+            to the left
+        """
         return self.shoreDir
 
     def check_collison(self):

@@ -14,16 +14,25 @@ from math import *
 import numpy
 
 class NoGoZone():
+    """
+        Boat no go here 
+    """
     def __init__(self, adjWindPos, adjWindNeg):
         self.max = adjWindPos
         self.min = adjWindNeg
 
 class SailSides():
+    """
+        Defines the sides of the baot, i.e. port and starboard 
+    """
     def __init__(self, TWA, origin, SAK):
         self.star = RangeOfPOS(SAK.mod360((TWA + 180) + origin), SAK)
         self.port = RangeOfPOS(SAK.mod360((TWA + 180) - origin), SAK)
 
 class RangeOfPOS():
+    """
+    
+    """
     def __init__(self, thetaPOS, SAK):
         self.max = SAK.mod360(thetaPOS + 15)
         self.min = SAK.mod360(thetaPOS - 14)
