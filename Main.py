@@ -26,6 +26,7 @@ from glob import *
 #         raise NotImplemented
 # class rudderController():
 #     raise NotImplemented
+
 class main():
     """
         Main and stuff
@@ -43,7 +44,7 @@ class main():
         self.read_waypoint_csv()
         self.timer1 = time.perf_counter()
         self.update_wind() 
-        self.gpsLon, self.gpsLat = self.update_position()
+        self.update_position()
         self.trueVesselBearing = 0
         self.STARTING_POS = self.gpsLon, self.gpsLat
         WAYPOINT1 = self.waypoints[0]
@@ -85,8 +86,8 @@ class main():
         # Implement translation to true wind speed and direction
         self.TWA = self.windAngApp # josh and jacob apply that function yall said you made here 
         self.TWS = self.windSpdApp
-        print("Wind Speed: " + str(self.TWS))
-        print("Wind Angle: " + str(self.TWA))
+        # print("Wind Speed: " + str(self.TWS)) # debug
+        # print("Wind Angle: " + str(self.TWA))
 
 
     def update_bearing(self):
@@ -95,7 +96,7 @@ class main():
             reading of the current held bearing
         """
         self.trueVesselBearing = self.SAK.mod360(self.VN.get_bearing())
-        print("Vessel bearing: " + str(self.trueVesselBearing))
+        # print("Vessel bearing: " + str(self.trueVesselBearing)) # debug
         """
             delete above values and 
             add functionality to 
@@ -110,8 +111,10 @@ class main():
             variables
         """
         x, y = self.VN.get_position()
+        self.gpsLon = x
+        self.gpsLat = y
         # print("Longitude: " + str(x) + ", Lattitude: " + str(y)) # use for debug stuff 
-        return x, y
+        # return x, y
 
     def run(self):
         """
