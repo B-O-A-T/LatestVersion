@@ -33,6 +33,8 @@ unsigned long task3_countdown;
 const int HANDSHAKE = 0;
 const int WINDSPEED = 1;
 const int APPARENTWINDANGLE = 2;
+const int MOVERUDDER = 3;
+const int SAILWINCH = 4;
 
 // Anemometer
 const int sensorPin = A0;
@@ -185,8 +187,26 @@ void task3() {
           Serial.println(windDirection);
         }
         break;
+      case MOVERUDDER:
+          if (Serial.availableForWrite()) {
+            Serial.println(windDirection);
+          }
+          break;
+      case SAILWINCH:
+          if (Serial.availableForWrite()) {
+            winch_sail();
+            Serial.println(windDirection);
+          }
+          break;
     }
   }
 }
 //// end of task3
 ///*****************************************************************************/
+
+void winch_sail() {
+  Serial.println("689")
+  if (Serial.available() > 0) {
+    int sailAngle = Serial.read();
+  }
+}

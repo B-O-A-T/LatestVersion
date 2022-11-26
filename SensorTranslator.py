@@ -19,6 +19,8 @@ class TelemCommands():
         self.initHandshake = 0
         self.windSpeed = 1
         self.apWind = 2
+        self.moveRudder = 3;
+        self.winchSail = 4;
 
 class Telemetry():
     """
@@ -71,3 +73,9 @@ class Telemetry():
         data = self.grandCentral.read_until()
         data = data.decode()
         return data
+
+    def winch_sail(self, desiredAngle):
+        self.grandCentral.write(bytes([self.winchSail]))
+        handshakeResponse = self.grandCentral.read_until()
+        if(int(handshakeResponse.decode()) == 689):
+            self.grandCentral.write(bytes([self.desiredAngle]))
