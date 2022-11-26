@@ -95,7 +95,7 @@ class Cartographer():
         distShore = self.boatPos.exterior.distance(self.LakeEdges.exterior)
         self.centerX, self.centerY = self.boatPos.centroid.x, self.boatPos.centroid.y
         # print(distShore)
-        if(distShore - self.safetyThresh < 0):
+        if(distShore - self.safetyThresh <= 0):
             # print("Warning, shore collision imminent!")
             p1, p2 = nearest_points(self.boatPos.exterior, self.LakeEdges.exterior)
             if(p2.x > self.centerX):
