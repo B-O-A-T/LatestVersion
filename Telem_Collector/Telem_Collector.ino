@@ -40,8 +40,12 @@ const int SAILWINCH = 4;
 const int RIGHT_RUDDER = 5;
 const int LEFT_RUDDER = 6;
 const int MID_RUDDER = 7;
-const int BLINKLED_ON = 10;
+const int BLINKLED_ON = 10; 
 const int BLINKLED_OFF = 11;
+const int CLOSE_HAULED = 12;
+const int BROAD_REACH = 13;
+const int RUN = 14;
+
 
 // Anemometer
 const int sensorPin = A0;
@@ -203,15 +207,43 @@ void task3() {
       case MOVERUDDER:
           if (Serial.availableForWrite()) {
             ruddler();
-            Serial.println(windDirection);
+          }
+          break;
+      case RIGHT_RUDDER:
+          if (Serial.availableForWrite()) {
+            ruddler();
+          }
+          break;
+      case LEFT_RUDDER:
+          if (Serial.availableForWrite()) {
+            ruddler();
+          }
+          break;
+      case MID_RUDDER:
+          if (Serial.availableForWrite()) {
+            ruddler();
           }
           break;
       case SAILWINCH:
           if (Serial.availableForWrite()) {
             winch_sail();
-            Serial.println(windDirection);
           }
           break;
+      case CLOSE_HAULED:
+          if (Serial.availableForWrite()) {
+            winch_sail();
+          }
+          break;
+      case BROAD_REACH:
+          if (Serial.availableForWrite()) {
+            winch_sail();
+          }
+          break;
+      case RUN:
+          if (Serial.availableForWrite()) {
+            winch_sail();
+          }
+          break; 
       case BLINKLED_ON:
         digitalWrite(LED_BUILTIN, HIGH);
         break;
@@ -231,9 +263,15 @@ void winch_sail() {
   Serial.println("689");
   if (Serial.available() > 0) {
     int sailAngle = Serial.read();
-    desiredAngle = sailAngle * (45/30);
-    myservo.write(desiredAngle);
+    if (sailAngle == CLOSE_HAULED); {
+      myservo.write(45);
+    }
+    if (sailAngle == BROAD_REACH)
+      myservo.write(90);
+    if (sailAngle == RUN)
+      myservo.write(135);
   }
+
 }
 
 void ruddler() {
